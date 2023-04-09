@@ -1,0 +1,24 @@
+{
+  "name": "dungeon-looters-api-game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KermitTheFr0g/Dungeon-Looters-API-Game.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KermitTheFr0g/Dungeon-Looters-API-Game/issues"
+  },
+  "homepage": "https://github.com/KermitTheFr0g/Dungeon-Looters-API-Game#readme",
+  "devDependencies": {
+    "typescript": "^5.0.4"
+  }
+}
