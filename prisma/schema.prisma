@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String        @id @default(uuid())
+  username   String        @unique
+  name       String?
+  api_token  String
+  gold       Int           @default(0)
+  hunters    UserHunters[]
+  items      UserItems[]
+  adventures Adventure[]
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+}
+
+model UserHunters {
+  id         String      @id @default(uuid())
+  user       User        @relation(fields: [userId], references: [id])
+  userId     String
+  hunter     Hunter      @relation(fields: [hunterId], references: [id])
+  hunterId   String
+  onMission  Boolean     @default(false)
+  adventure  Adventure[]
+  level      Int         @default(1)
+  experience Int         @default(0)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model UserItems {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  item      Item     @relation(fields: [itemId], references: [id])
+  itemId    String
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Adventure {
+  id           String      @id @default(uuid())
+  user         User        @relation(fields: [userId], references: [id])
+  userId       String
+  dungeon      Dungeon     @relation(fields: [dungeonId], references: [id])
+  dungeonId    String
+  hunter       UserHunters @relation(fields: [hunterId], references: [id])
+  hunterId     String
+  beganAt      DateTime    @default(now())
+  completingAt DateTime
+}
+
+model Hunter {
+  id           String        @id @default(uuid())
+  name         String
+  description  String
+  image        String
+  health       Int
+  attack       Int
+  defense      Int
+  speed        Int
+  overallLevel Int
+  starter      Boolean       @default(false)
+  users        UserHunters[]
+}
+
+model Item {
+  id          String        @id @default(uuid())
+  name        String
+  description String
+  image       String
+  users       UserItems[]
+  dungeons    DungeonLoot[]
+}
+
+model Dungeon {
+  id          String        @id @default(uuid())
+  name        String
+  description String
+  image       String
+  level       Int
+  lootPool    DungeonLoot[]
+  adventures  Adventure[]
+}
+
+model DungeonLoot {
+  id         String   @id @default(uuid())
+  dungeon    Dungeon  @relation(fields: [dungeonId], references: [id])
+  dungeonId  String
+  item       Item     @relation(fields: [itemId], references: [id])
+  itemId     String
+  dropChance Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
