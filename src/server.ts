@@ -1,6 +1,14 @@
 import express, {Request, Response} from 'express';
-const port = 3001;
+import dotenv from 'dotenv';
+
 const app = express();
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
+
+dotenv.config();
+const port = process.env.SERVER_PORT;
+
 
 // middleware
 app.use(express.json());
@@ -8,10 +16,28 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // routes
-app.get('/', (req: Request, res: Response) => {
+app.use('/user/account', require('../routes/user/account'));
 
-    
-    return res.send('Welcome to Dungeon Looters!');
+app.get('/', (req: Request, res: Response) => {
+    return res.json({
+        message: 'Welcome to The Cosmic Array'
+    })
+})
+
+app.get('/test', async (req: Request, res: Response) => {
+    const users = await prisma.user.findMany()
+
+    const hunter = await prisma.hunter.findFirst({
+        where: {
+            name: 'cool hunter'
+        }
+    })
+
+
+    return res.json({
+        users,
+        hunter
+    })
 })
 
 // start the Express server
