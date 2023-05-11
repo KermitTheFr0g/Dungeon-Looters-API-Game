@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // routes
 app.use('/user/account', require('../routes/user/account'));
+app.use('/starter/hunter', require('../routes/starter/hunters'))
 
 app.get('/', (req: Request, res: Response) => {
     return res.json({
