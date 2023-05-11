@@ -6,7 +6,8 @@ import verifyToken from '../../middleware/verifyToken';
 
 starterHunterRouter.use(verifyToken);
 
-starterHunterRouter.get('/check', async (req: Request, res: Response) => {
+// * returns back to the user if they're applicable for a starter hunter
+starterHunterRouter.get('/check-applicable', async (req: Request, res: Response) => {
     const apiToken = req.query.token
 
     const getUser = await prisma.user.findFirst({
@@ -18,10 +19,42 @@ starterHunterRouter.get('/check', async (req: Request, res: Response) => {
         }
     })
 
+    const userHunters = getUser?.hunters;
+
+    // * check if user already has a hunter
+    if(userHunters?.length !== 0){
+        return res.status(400).json({
+            message: 'User already has starter hunter'                           
+        })
+    }
+
     return res.json({
-        success: true,
-        user: getUser
+        starterHunterApplicable: true
     })
-})
+});
+
+// * returns back to user the starter hunters
+starterHunterRouter.get('/get-hunters', async (req: Request, res: Response) => {
+    // * get starter hunters
+    const getHunters = await prisma.hunter.findMany({
+        where: {
+            starter: true
+        },
+        select: {
+            name: true,
+            description: true,
+            image: true,
+            health: true,
+            attack: true,
+            defense: true,
+            speed: true,
+            overallLevel: true,
+        }
+    })
+
+    return res.json({
+        starterHunters: getHunters
+    })
+});
 
 module.exports = starterHunterRouter;
