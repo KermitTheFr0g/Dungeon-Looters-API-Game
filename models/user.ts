@@ -1,6 +1,7 @@
 import generateApiKey from 'generate-api-key';
 import prisma from '../prisma/prisma';
 
+// * generate an api key for the user
 async function genAPIKey(){
     const key = await generateApiKey({
         method: 'string',
@@ -25,6 +26,29 @@ async function genAPIKey(){
     }
 }
 
+
+// * check if the user already has a hunter
+async function applicableStarterHunter(api_token: string){
+    // get all user's hunters
+    const getUser = await prisma.user.findFirst({
+        where: {
+            api_token: api_token
+        },
+        select: {
+            hunters: {
+                select: {
+                    id: true
+                }
+            }
+        }
+    })
+
+    const userHunters = getUser?.hunters;
+
+    return userHunters?.length == 0;
+}
+
 module.exports = {
-    genAPIKey
+    genAPIKey,
+    applicableStarterHunter
 }

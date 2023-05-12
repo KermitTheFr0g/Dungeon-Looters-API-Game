@@ -4,32 +4,24 @@ const starterHunterRouter = express.Router();
 import prisma from '../../prisma/prisma';
 import verifyToken from '../../middleware/verifyToken';
 
+const userModels = require('../../models/user.ts');
+
 starterHunterRouter.use(verifyToken);
 
 // * returns back to the user if they're applicable for a starter hunter
 starterHunterRouter.get('/check-applicable', async (req: Request, res: Response) => {
     const apiToken = req.query.token
 
-    const getUser = await prisma.user.findFirst({
-        where: {
-            api_token: apiToken as string
-        },
-        include: {
-            hunters: true,
-        }
-    })
+    const applicable = await userModels.applicableStarterHunter(apiToken as string);
 
-    const userHunters = getUser?.hunters;
-
-    // * check if user already has a hunter
-    if(userHunters?.length !== 0){
+    if(!applicable){
         return res.status(400).json({
-            message: 'User already has starter hunter'                           
+            message: 'User already has starter hunter'
         })
     }
 
     return res.json({
-        starterHunterApplicable: true
+        starterHunterApplicable: applicable
     })
 });
 
@@ -56,5 +48,24 @@ starterHunterRouter.get('/get-hunters', async (req: Request, res: Response) => {
         starterHunters: getHunters
     })
 });
+
+// * user selects the starter hunter
+starterHunterRouter.post('/select-hunter', async (req: Request, res: Response) => {
+    const hunterName = req.body.hunterName;
+
+    // * check if user is applicable for starter hunter
+    const applicable = await userModels.applicableStarterHunter(req.query.token as string);
+    if(!applicable){
+        return res.status(400).json({
+            message: 'User already has starter hunter'
+        })
+    }
+
+    
+    // todo
+    // check if hunter is valid and is starter hunter
+
+
+})
 
 module.exports = starterHunterRouter;
