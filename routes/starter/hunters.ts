@@ -49,6 +49,7 @@ starterHunterRouter.get('/get-hunters', async (req: Request, res: Response) => {
     })
 });
 
+//! read through this function again
 // * user selects the starter hunter
 starterHunterRouter.post('/select-hunter', async (req: Request, res: Response) => {
     const hunterName = req.body.hunterName;
@@ -61,11 +62,46 @@ starterHunterRouter.post('/select-hunter', async (req: Request, res: Response) =
         })
     }
 
-    
-    // todo
-    // check if hunter is valid and is starter hunter
+
+    // * check if hunter is valid and is starter hunter
+    const getHunter = await prisma.hunter.findFirst({
+        where: {
+            name: hunterName as string,
+            starter: true
+        }
+    })
+
+    if(!getHunter){
+        return res.status(400).json({
+            message: 'Invalid starter hunter',
+            tip: 'Make sure you are selecting a starter hunter / hunter exists using /starter/hunter/get-hunters'
+        })
+    }
 
 
+    //todo add new hunter to user
+    await prisma.userHunters.create({
+        data: {
+            user: {
+                connect: {
+                    api_token: req.query.token as string
+                }
+            },
+            hunter: { 
+                connect: {
+                    name: hunterName as string
+                }
+            }
+        }
+    })
+
+
+    // * returns back to user
+    return res.json({
+        success: true,
+        message: 'Starter hunter selected successfully!',
+        hunterName: hunterName
+    })
 })
 
 module.exports = starterHunterRouter;
