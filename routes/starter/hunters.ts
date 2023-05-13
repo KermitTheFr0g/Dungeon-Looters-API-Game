@@ -79,7 +79,7 @@ starterHunterRouter.post('/select-hunter', async (req: Request, res: Response) =
     }
 
 
-    //todo add new hunter to user
+    // * adds new hunter to user
     await prisma.userHunters.create({
         data: {
             user: {
