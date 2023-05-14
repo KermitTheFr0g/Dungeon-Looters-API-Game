@@ -89,6 +89,7 @@ model Dungeon {
   id          String        @id @default(uuid())
   name        String
   description String
+  starter     Boolean       @default(false)
   image       String
   level       Int
   lootPool    DungeonLoot[]
