@@ -61,7 +61,7 @@ starterDungeonRouter.post('/select-dungeon', async (req: Request, res: Response)
     const hunterName = req.body.hunterName;
     
     // * check if the hunter can be sent
-    const hunterOnAdventure = await prisma.userHunters.findFirst({
+    const userHunters = await prisma.userHunters.findFirst({
         where: {
             user: {
                 api_token: req.query.token as string
@@ -71,18 +71,40 @@ starterDungeonRouter.post('/select-dungeon', async (req: Request, res: Response)
             }
         },
         select: {
-            onMission: true
+            onMission: true,
+            hunter: {
+                select: {
+                    starter: true
+                }
+            }
         }
     }); 
 
-    // todo check if there are any hunters found
+    // * check if user owns the hunter they selected
+    if(!userHunters){
+        return res.status(400).json({
+            error: 'Hunter not found',
+            tip: 'Check if the hunter name is correct and you own hunter!'
+        })
+    }
 
-    console.log(hunterOnAdventure);
+
+
+    // * check if user already has a hunter on a mission
+    if(userHunters.onMission){
+        return res.status(400).json({
+            error: 'Hunter already on a mission',
+            tip: 'Wait for the hunter to return before sending them on another adventure!'
+        })
+    }
+
+    // todo check if dungeon exists and is a starter dungeon
+    
 
     return res.json({
         dungeonSelected: dungeonName,
         hunterSelected: hunterName,
-        hunterOnAdventure: hunterOnAdventure?.onMission
+        hunterOnAdventure: userHunters?.onMission
     })
 })
 
