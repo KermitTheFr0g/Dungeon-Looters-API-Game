@@ -57,11 +57,33 @@ starterDungeonRouter.get('/dungeon-details', async (req: Request, res: Response)
 
 // * user selects the starter dungeon
 starterDungeonRouter.post('/select-dungeon', async (req: Request, res: Response) => {
-    const dungeonName = req.query.dungeonName;
-    const hunterName = req.query.hunterName;
+    const dungeonName = req.body.dungeonName;
+    const hunterName = req.body.hunterName;
     
-    // * 
+    // * check if the hunter can be sent
+    const hunterOnAdventure = await prisma.userHunters.findFirst({
+        where: {
+            user: {
+                api_token: req.query.token as string
+            },
+            hunter: {
+                name: hunterName as string
+            }
+        },
+        select: {
+            onMission: true
+        }
+    }); 
 
+    // todo check if there are any hunters found
+
+    console.log(hunterOnAdventure);
+
+    return res.json({
+        dungeonSelected: dungeonName,
+        hunterSelected: hunterName,
+        hunterOnAdventure: hunterOnAdventure?.onMission
+    })
 })
 
 
