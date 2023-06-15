@@ -26,6 +26,7 @@ starterDungeonRouter.get('/get-dungeons', async (req: Request, res: Response) =>
     })
 });
 
+// * returns back details about a specific dungeon
 starterDungeonRouter.get('/dungeon-details', async (req: Request, res: Response) => {
     const dungeonName = req.query.dungeonName;
 
@@ -53,5 +54,15 @@ starterDungeonRouter.get('/dungeon-details', async (req: Request, res: Response)
         dungeon: getDungeon
     });
 })
+
+// * user selects the starter dungeon
+starterDungeonRouter.post('/select-dungeon', async (req: Request, res: Response) => {
+    const dungeonName = req.query.dungeonName;
+    const hunterName = req.query.hunterName;
+    
+    // * 
+
+})
+
 
 module.exports = starterDungeonRouter;
