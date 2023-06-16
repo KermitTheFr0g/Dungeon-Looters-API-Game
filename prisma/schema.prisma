@@ -87,7 +87,7 @@ model Item {
 
 model Dungeon {
   id          String        @id @default(uuid())
-  name        String
+  name        String        @unique
   description String
   starter     Boolean       @default(false)
   image       String
