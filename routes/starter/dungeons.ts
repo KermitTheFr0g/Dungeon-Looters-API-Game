@@ -88,8 +88,6 @@ starterDungeonRouter.post('/select-dungeon', async (req: Request, res: Response)
         })
     }
 
-
-
     // * check if user already has a hunter on a mission
     if(userHunters.onMission){
         return res.status(400).json({
@@ -98,8 +96,47 @@ starterDungeonRouter.post('/select-dungeon', async (req: Request, res: Response)
         })
     }
 
-    // todo check if dungeon exists and is a starter dungeon
+    // * get dungeon details
+    const starterDungeons = await prisma.dungeon.findFirst({
+        where: {
+            starter: true,
+            name: dungeonName as string,
+        },
+        select: {
+            starter: true,
+        }
+    })
     
+    // * check if dungeon exists and is a starter dungeon
+    if(!starterDungeons){
+        return res.status(400).json({
+            error: 'Starter Dungeon not found',
+            tip: 'Check if the dungeon name is correct! Potentially not a starter dungeon!'
+        })
+    }
+
+    // * send hunter on adventure
+    await prisma.adventure.create({
+        data: {
+            user: {
+                connect: {
+                    api_token: req.query.token as string
+                }
+            },
+            dungeon: { 
+                connect: { 
+                    name: dungeonName as string
+                }
+            },
+
+            hunter: {
+                connect: {
+                    
+                }
+            }
+        }
+    })
+
 
     return res.json({
         dungeonSelected: dungeonName,
