@@ -49,7 +49,7 @@ adventureDungeonRouter.get('/active', async (req: Request, res: Response) => {
 
     if(activeDungeonAdventures.length === 0){
         return res.json({
-            message: 'No active dungeon adventures!',
+            message: "No active dungeon adventures!",
             tip: "Start a dungeon adventure!"
         })
     }
@@ -61,8 +61,7 @@ adventureDungeonRouter.get('/active', async (req: Request, res: Response) => {
 
     // * returns back to user active dungeons
     return res.json({
-        activeDungeonAdventures: activeDungeonAdventures,
-        checkedAdventures: checkAdventures
+        activeDungeonAdventures: checkAdventures,
     });
 });
 
@@ -95,6 +94,15 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
             message: 'Dungeon Advneture does not exist!'
         })
     }
+
+    // * check if dungeon adventure is complete and ready for debrief
+    if(!adventureExists.complete || adventureExists.debriefed){
+        return res.status(400).json({
+            message: 'Dungeon Adventure not ready for debrief!'
+        })
+    }
+
+    
 })
 
 
