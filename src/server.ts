@@ -16,9 +16,13 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // routes
+// starter endpoints
 app.use('/user/account', require('../routes/user/account'));
 app.use('/starter/hunter', require('../routes/starter/hunters'))
 app.use('/starter/dungeon', require('../routes/starter/dungeons'))
+
+app.use('/adventure/dungeon', require('../routes/adventure/dungeons'));
+
 
 app.get('/', (req: Request, res: Response) => {
     return res.json({

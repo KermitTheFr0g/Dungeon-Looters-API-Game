@@ -60,6 +60,8 @@ model Adventure {
   hunterId     String
   beganAt      DateTime    @default(now())
   completingAt DateTime
+  complete     Boolean     @default(false)
+  debriefed    Boolean     @default(false)
 }
 
 model Hunter {
