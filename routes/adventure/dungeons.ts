@@ -102,6 +102,7 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
         })
     }
 
+    // * get dungeon adventure details
     
 })
 
