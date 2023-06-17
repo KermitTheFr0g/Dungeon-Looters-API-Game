@@ -71,6 +71,7 @@ starterDungeonRouter.post('/select-dungeon', async (req: Request, res: Response)
             }
         },
         select: {
+            id: true,
             onMission: true,
             hunter: {
                 select: {
@@ -115,6 +116,10 @@ starterDungeonRouter.post('/select-dungeon', async (req: Request, res: Response)
         })
     }
 
+    // ! need to come up with the algorithm for time to complete dungeon
+    // ! for now 5 minutes are added to the current time
+    // however this might not change for starter dungeons
+
     // * send hunter on adventure
     await prisma.adventure.create({
         data: {
@@ -131,19 +136,22 @@ starterDungeonRouter.post('/select-dungeon', async (req: Request, res: Response)
 
             hunter: {
                 connect: {
-                    
+                    id: userHunters.id
                 }
-            }
+            },
+
+            completingAt: new Date(Date.now() + (1000 * 60 * 5))
         }
     })
 
+    // todo return back to the user that the adventure has begun
 
     return res.json({
         dungeonSelected: dungeonName,
         hunterSelected: hunterName,
-        hunterOnAdventure: userHunters?.onMission
+        hunterOnAdventure: userHunters?.onMission, 
     })
-})
 
+});
 
 module.exports = starterDungeonRouter;
