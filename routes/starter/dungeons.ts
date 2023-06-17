@@ -55,6 +55,9 @@ starterDungeonRouter.get('/dungeon-details', async (req: Request, res: Response)
     });
 })
 
+// todo some end point to get information about the dungeon user wants to complete
+// todo gives info about loot pool, level, etc
+
 // * user selects the starter dungeon
 starterDungeonRouter.post('/select-dungeon', async (req: Request, res: Response) => {
     const dungeonName = req.body.dungeonName;
@@ -144,14 +147,25 @@ starterDungeonRouter.post('/select-dungeon', async (req: Request, res: Response)
         }
     })
 
-    // todo return back to the user that the adventure has begun
 
-    return res.json({
-        dungeonSelected: dungeonName,
-        hunterSelected: hunterName,
-        hunterOnAdventure: userHunters?.onMission, 
+    // * update hunter to be on a mission
+    await prisma.userHunters.update({
+        where: {
+            id: userHunters.id
+        }, 
+        data: {
+            onMission: true
+        }
     })
 
+    // todo return back to the user that the adventure has begun
+    return res.json({
+        adventureStarted: true,
+        dungeonSelected: dungeonName,
+        hunterSelected: hunterName,
+        returningAt: new Date(Date.now() + (1000 * 60 * 5)),
+        tip: "You have begun a starter Dungeon!"
+    })
 });
 
 module.exports = starterDungeonRouter;
