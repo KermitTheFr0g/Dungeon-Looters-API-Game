@@ -143,6 +143,7 @@ starterDungeonRouter.post('/select-dungeon', async (req: Request, res: Response)
                 }
             },
 
+            // ! this is what needs to be changed
             completingAt: new Date(Date.now() + (1000 * 60 * 5))
         }
     })

@@ -5,7 +5,6 @@ import prisma from '../../prisma/prisma';
 import updateAdventures from '../../models/adventure';
 import verifyToken from '../../middleware/verifyToken';
 
-
 adventureDungeonRouter.use(verifyToken);
 
 // * returns back to the user all of the active active dungeon adventures
@@ -55,13 +54,13 @@ adventureDungeonRouter.get('/active', async (req: Request, res: Response) => {
     }
 
     // * check the active dungeon adventures to see if any are complete
-    const checkAdventures = await updateAdventures(activeDungeonAdventures);
+    const checkedAdventures = await updateAdventures(activeDungeonAdventures);
 
-    // todo test this works with another adventure added that is not complete
+    // * this returns back to the user the updates dungeons
 
     // * returns back to user active dungeons
     return res.json({
-        activeDungeonAdventures: checkAdventures,
+        activeDungeonAdventures: checkedAdventures,
     });
 });
 
@@ -69,6 +68,7 @@ adventureDungeonRouter.get('/active', async (req: Request, res: Response) => {
 // * debrief hunter from a dungeon adventure
 adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
     // * get dungeon id
+    const apiToken = req.query.token;
     const adventureID = req.body.adventureID;
 
     if(adventureID == undefined || adventureID == null){
@@ -86,6 +86,8 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
         select: {
             complete: true,
             debriefed: true,
+            dungeonId: true,
+            hunterId: true,
         }
     });
 
@@ -103,7 +105,30 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
     }
 
     // * get dungeon adventure details
-    
+    // todo to be used below
+    const dungeonDetails = await prisma.dungeon.findFirst({
+        where: {
+            id: adventureExists.dungeonId as string,
+        },
+        select: {
+            name: true,
+            level: true,
+            lootPool: true,
+        }
+    });
+
+
+    // * get rewards
+    // todo add xp / levels to hunter
+
+    // todo get loot
+
+    // todo get gold
+
+    // todo change details to say debriefed
+
+
+    // todo update hunter details
 })
 
 
