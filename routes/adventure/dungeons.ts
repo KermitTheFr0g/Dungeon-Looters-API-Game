@@ -118,22 +118,104 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
     });
 
 
-    // * get rewards
+    // ! get rewards
     // todo add xp / levels to hunter
 
     // todo get loot
 
     // todo get gold
 
-    // todo change details to say debriefed
+    // * change details to say debriefed
+    const updateAdventure = await prisma.adventure.update({
+        where: {
+            id: adventureID as string,
+        },
+        data: {
+            debriefed: true,
+        }
+    })
 
+    // * update hunter stats and level
+    const updatedHunter = await prisma.userHunters.updateMany({
+        where: {
+            hunter: {
+                id: adventureExists.hunterId as string,
+            },
+            user: {
+                api_token: apiToken as string
+            }
+        }, 
+        data: {
+            onMission: false,
+            experience: {
+                increment: 100
+            },
+            level: { 
+                increment: 1
+            }
+        }
+    })
 
-    // todo update hunter details
+    return res.json({
+        message: 'Dungeon Adventure Debriefed!',
+        rewards: {
+            xp: 100,
+            gold: 100,
+            loot: 'list here',
+        }
+    })
 })
 
 
 // * show previous historic dungeon adventures
+adventureDungeonRouter.get('/historic', async (req: Request, res: Response) => {
+    // * get all historic dungeons
+    const apiToken = req.query.token;
 
+    const historicDungeons = await prisma.adventure.findMany({
+        where: {
+            user: {
+                api_token: apiToken as string
+            },
+            debriefed: true,
+        },
+        select: {
+            id: true,
+            dungeon: {
+                select: {
+                    name: true,
+                    level: true
+                }
+            },
+            hunter: {
+                select: {
+                    hunter: {
+                        select: {
+                            name: true, 
+                            health: true,
+                            attack: true,
+                            defense: true,
+                            speed: true,
+                            overallLevel: true,
+                        }
+                    }
+                }
+            },
+        }
+    })
+
+    // * check if there are any historic dungeons
+    if(historicDungeons.length === 0){
+        return res.json({
+            message: "No historic dungeon adventures!",
+            tip: "Start a dungeon adventure!"
+        })
+    }
+
+    return res.json({
+        historicDungeonAdventures: historicDungeons,
+    })
+})
 
 
 module.exports = adventureDungeonRouter;
