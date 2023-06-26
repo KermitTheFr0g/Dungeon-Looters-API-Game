@@ -24,7 +24,17 @@ adventureDungeonRouter.get('/active', async (req: Request, res: Response) => {
             dungeon: {
                 select: {
                     name: true,
-                    level: true
+                    level: true,
+                    lootPool: {
+                        select: {
+                           item: {
+                                select: {
+                                    name: true
+                                }
+                            },
+                            dropChance: true,
+                        }
+                    }
                 }
             },
             hunter: {
@@ -121,9 +131,15 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
     // ! get rewards
     // todo add xp / levels to hunter
 
-    // todo get loot
+    // todo add xp / levels to user
 
-    // todo get gold
+    // * get random loot from loot pool
+    const lootPool = dungeonDetails?.lootPool;
+    console.log(lootPool);
+
+    // * get random gold from level of dungeon
+    let randomGold = Math.floor(Math.random() * (dungeonDetails?.level || 1)) * 100;
+
 
     // * change details to say debriefed
     const updateAdventure = await prisma.adventure.update({
@@ -152,6 +168,18 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
             },
             level: { 
                 increment: 1
+            }
+        }
+    })
+
+    // * update user gold
+    const updatedUser = await prisma.user.update({
+        where: {
+            api_token: apiToken as string
+        },
+        data: {
+            gold: {
+                increment: randomGold
             }
         }
     })
