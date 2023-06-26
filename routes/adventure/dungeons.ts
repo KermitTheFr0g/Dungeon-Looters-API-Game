@@ -151,6 +151,8 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
         }
     })
 
+    // ! the user hunter is not being updated
+
     // * update hunter stats and level
     const updatedHunter = await prisma.userHunters.updateMany({
         where: {
@@ -172,6 +174,8 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
         }
     })
 
+    // ! the user hunter is not being updated
+
     // * update user gold
     const updatedUser = await prisma.user.update({
         where: {
@@ -188,7 +192,7 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
         message: 'Dungeon Adventure Debriefed!',
         rewards: {
             xp: 100,
-            gold: 100,
+            gold: randomGold,
             loot: 'list here',
         }
     })
