@@ -175,7 +175,7 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
     })
 
     // ! the user hunter is not being updated
-
+    
     // * update user gold
     const updatedUser = await prisma.user.update({
         where: {
