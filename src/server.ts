@@ -31,18 +31,10 @@ app.get('/', (req: Request, res: Response) => {
 })
 
 app.get('/test', async (req: Request, res: Response) => {
-    const users = await prisma.user.findMany()
-
-    const hunter = await prisma.hunter.findFirst({
-        where: {
-            name: 'cool hunter'
-        }
-    })
-
+    const users = await prisma.user.findMany();
 
     return res.json({
-        users,
-        hunter
+        users: users
     })
 })
 
