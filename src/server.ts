@@ -31,6 +31,7 @@ app.get('/', (req: Request, res: Response) => {
 })
 
 app.get('/test', async (req: Request, res: Response) => {
+    // ! this has to be removed
     const users = await prisma.user.findMany();
 
     return res.json({
