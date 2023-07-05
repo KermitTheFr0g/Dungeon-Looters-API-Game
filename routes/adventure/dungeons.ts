@@ -97,13 +97,17 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
             complete: true,
             debriefed: true,
             dungeonId: true,
-            hunterId: true,
+            hunter: {
+                select: {
+                    hunterId: true
+                }
+            }
         }
     });
 
     if(!adventureExists){
         return res.status(400).json({
-            message: 'Dungeon Advneture does not exist!'
+            message: 'Dungeon Adventure does not exist!'
         })
     }
 
@@ -140,7 +144,6 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
     // * get random gold from level of dungeon
     let randomGold = Math.floor(Math.random() * (dungeonDetails?.level || 1)) * 100;
 
-
     // * change details to say debriefed
     const updateAdventure = await prisma.adventure.update({
         where: {
@@ -151,13 +154,11 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
         }
     })
 
-    // ! the user hunter is not being updated
-
     // * update hunter stats and level
     const updatedHunter = await prisma.userHunters.updateMany({
         where: {
             hunter: {
-                id: adventureExists.hunterId as string,
+                id: adventureExists.hunter.hunterId as string,
             },
             user: {
                 api_token: apiToken as string
@@ -173,8 +174,6 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
             }
         }
     })
-
-    // ! the user hunter is not being updated
     
     // * update user gold
     const updatedUser = await prisma.user.update({
@@ -183,7 +182,7 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
         },
         data: {
             gold: {
-                increment: randomGold
+                increment: 10
             }
         }
     })
