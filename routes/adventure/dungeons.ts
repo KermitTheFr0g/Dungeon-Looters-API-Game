@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 const adventureDungeonRouter = express.Router();
 
 import prisma from '../../prisma/prisma';
-import updateAdventures from '../../models/adventure';
+import adventureModel from '../../models/adventure';
 import verifyToken from '../../middleware/verifyToken';
 
 adventureDungeonRouter.use(verifyToken);
@@ -64,7 +64,7 @@ adventureDungeonRouter.get('/active', async (req: Request, res: Response) => {
     }
 
     // * check the active dungeon adventures to see if any are complete
-    const checkedAdventures = await updateAdventures(activeDungeonAdventures);
+    const checkedAdventures = await adventureModel.updateAdventures(activeDungeonAdventures);
 
     // * this returns back to the user the updates dungeons
 
@@ -141,6 +141,9 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
     const lootPool = dungeonDetails?.lootPool;
     console.log(lootPool);
 
+    // todos choose items to add to user 
+
+
     // * get random gold from level of dungeon
     let randomGold = Math.floor(Math.random() * (dungeonDetails?.level || 1)) * 100;
 
@@ -182,7 +185,7 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
         },
         data: {
             gold: {
-                increment: 10
+                increment: randomGold
             }
         }
     })

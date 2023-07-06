@@ -2,7 +2,7 @@ import express, {Request, Response} from 'express';
 const userAccountRouter = express.Router();
 
 import prisma from '../../prisma/prisma';
-const userModels = require('../../models/user.ts');
+import userModels from '../../models/user';
 
 // * user signs up with username and name
 // * they are added to the db and given an api token
@@ -39,7 +39,7 @@ userAccountRouter.post('/signup', async (req: Request, res: Response) => {
         data: {
             username: userDetails.username.toLowerCase(),
             name: userDetails.name,
-            api_token: api_token
+            api_token: api_token as string
         }
     })
 
