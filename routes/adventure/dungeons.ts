@@ -127,10 +127,20 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
         select: {
             name: true,
             level: true,
-            lootPool: true,
+            lootPool: {
+                select: {
+                    id: true,
+                    itemId: true,
+                    dropChance: true,
+                    item: {
+                        select: {
+                            name: true
+                        }
+                    }
+                }
+            }
         }
     });
-
 
     // ! get rewards
     // todo add xp / levels to hunter
@@ -139,7 +149,13 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
 
     // * get random loot from loot pool
     const lootPool = dungeonDetails?.lootPool;
-    console.log(lootPool);
+    let earntItems;
+
+    if(typeof lootPool != 'undefined'){
+        earntItems = adventureModel.collectItemPool(lootPool);
+    }
+
+    console.log(earntItems);
 
     // todos choose items to add to user 
 
@@ -195,7 +211,7 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
         rewards: {
             xp: 100,
             gold: randomGold,
-            loot: 'list here',
+            loot: earntItems,
         }
     })
 })

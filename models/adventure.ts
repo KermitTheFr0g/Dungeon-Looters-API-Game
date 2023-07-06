@@ -25,6 +25,25 @@ async function updateAdventures(dungeonsList: Array<{completingAt: Date, complet
     return dungeonsList;
 }
 
+function collectItemPool(itemList: Array<{id: string, itemId: string, dropChance: number, item: {name: string}}>){
+    let earntItems: Array<{id: string, name: string, dropChance: number}> = [];
+    itemList.map(item => {
+        const chance = Math.floor(Math.random() * 100) + 1;
+        if(chance <= item.dropChance){
+
+            const itemObject = {
+                id: item.id, 
+                name: item.item.name,
+                dropChance: item.dropChance
+            }
+            earntItems.push(itemObject);
+        }
+    })
+
+    return earntItems;
+}
+
 export default {
-    updateAdventures
+    updateAdventures,
+    collectItemPool
 }
