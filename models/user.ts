@@ -48,7 +48,7 @@ async function applicableStarterHunter(api_token: string){
     return userHunters?.length == 0;
 }
 
-module.exports = {
+export default {
     genAPIKey,
     applicableStarterHunter
 }

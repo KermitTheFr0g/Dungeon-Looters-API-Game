@@ -25,4 +25,6 @@ async function updateAdventures(dungeonsList: Array<{completingAt: Date, complet
     return dungeonsList;
 }
 
-export default updateAdventures;
+export default {
+    updateAdventures
+}
