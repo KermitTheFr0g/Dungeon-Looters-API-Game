@@ -157,7 +157,9 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
 
     console.log(earntItems);
 
-    // todos choose items to add to user 
+    // todo add these earnt items to user
+    
+    
 
 
     // * get random gold from level of dungeon

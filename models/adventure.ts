@@ -32,7 +32,7 @@ function collectItemPool(itemList: Array<{id: string, itemId: string, dropChance
         if(chance <= item.dropChance){
 
             const itemObject = {
-                id: item.id, 
+                id: item.itemId, 
                 name: item.item.name,
                 dropChance: item.dropChance
             }
