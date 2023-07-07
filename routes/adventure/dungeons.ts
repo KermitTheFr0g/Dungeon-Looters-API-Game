@@ -159,7 +159,11 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
 
     // todo add these earnt items to user
     
-    
+    // todo check the items that the user has
+
+    // todo add to the quantity of items already owned
+
+    // todo add new items which are not already owned
 
 
     // * get random gold from level of dungeon
