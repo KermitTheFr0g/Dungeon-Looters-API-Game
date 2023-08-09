@@ -7,7 +7,7 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 dotenv.config();
-const port = process.env.SERVER_PORT;
+const port = process.env.SERVER_PORT || 3000;
 
 
 // middleware

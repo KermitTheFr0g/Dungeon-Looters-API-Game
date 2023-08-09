@@ -50,5 +50,5 @@ async function applicableStarterHunter(api_token: string){
 
 export default {
     genAPIKey,
-    applicableStarterHunter
+    applicableStarterHunter,
 }
