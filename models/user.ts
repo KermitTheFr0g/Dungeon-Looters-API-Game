@@ -48,7 +48,20 @@ async function applicableStarterHunter(api_token: string){
     return userHunters?.length == 0;
 }
 
+async function addExperience(userID: string, additionalExperience: number){
+    // every level is going to have 100 exerience points to make it easy
+
+    // get current experience to user
+
+    // mod the experience by 100 to find what is left to calculate
+
+    // increment user level and set their current experience points
+
+    // return if success
+}
+
 export default {
     genAPIKey,
     applicableStarterHunter,
+    addExperience,
 }

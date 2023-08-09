@@ -9,9 +9,9 @@ async function getAllItems(){
     }
 }
 
-async function addAdditionalItems(items: Array<String>){
+async function addAdditionalItems(items: Array<string>){
     // needs to take the array of items and add these to the user's items
-
+    
     
     return {
         success: true
