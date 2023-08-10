@@ -70,6 +70,28 @@ class UserModel {
             success: true,
         }
     }
+
+    // * get all user's items
+    // todo
+    async getAllItems(apiToken: string){
+        // get all user's items and return
+
+        console.log(apiToken);
+
+        return {
+            items: []
+        }
+    }
+
+    // * add an array of items to a user
+    // todo
+    async addItems(apiToken: string, items: Array<string>){
+        // needs to take the array of items and add these to the user's items
+        
+        return {
+            success: true,
+        }
+    }
 }
 
 
