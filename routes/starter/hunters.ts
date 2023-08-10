@@ -26,7 +26,7 @@ starterHunterRouter.get('/check-applicable', async (req: Request, res: Response)
 });
 
 // * returns back to user the starter hunters
-starterHunterRouter.get('/get-hunters', async (req: Request, res: Response) => {
+starterHunterRouter.get('/hunters', async (req: Request, res: Response) => {
     // * get starter hunters
     const getHunters = await prisma.hunter.findMany({
         where: {
@@ -41,7 +41,7 @@ starterHunterRouter.get('/get-hunters', async (req: Request, res: Response) => {
             defense: true,
             speed: true,
             overallLevel: true,
-        }
+        },
     })
 
     return res.json({
@@ -74,7 +74,7 @@ starterHunterRouter.post('/select-hunter', async (req: Request, res: Response) =
     if(!getHunter){
         return res.status(400).json({
             message: 'Invalid starter hunter',
-            tip: 'Make sure you are selecting a starter hunter / hunter exists using /starter/hunter/get-hunters'
+            tip: 'Make sure you are selecting a starter hunter / hunter exists using /starter/hunter/hunters'
         })
     }
 
