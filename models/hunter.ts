@@ -13,13 +13,20 @@ class hunterUtils {
             select: {
                 experience: true
             }
-        })
+        });
+
+        if(!hunterExperience){
+            return {
+                error: true,
+                message: "No user hunter has been found!"
+            }
+        }
 
         // mod the experience by 100 to find what is left to calculate
         const totalExperience = hunterExperience.experience + additionalExperience;
 
         const experience = totalExperience % 100;
-        const additionalLevels = additionalExperience - experience;
+        const additionalLevels = (totalExperience - experience) / 100;
 
         // increment hunter level and set their current experience points
         await prisma.userHunters.update({
@@ -34,7 +41,12 @@ class hunterUtils {
             }
         })
 
+        // todo maybe return the new level of the hunter
+
         // return if success
+        return {
+            success: true,
+        }
     }
 }
 

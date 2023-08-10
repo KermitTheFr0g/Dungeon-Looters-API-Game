@@ -3,6 +3,8 @@ const adventureDungeonRouter = express.Router();
 
 import prisma from '../../prisma/prisma';
 import adventureModel from '../../models/adventure';
+import hunterUtils from '../../models/hunter';
+import userUtils from '../../models/user';
 import verifyToken from '../../middleware/verifyToken';
 
 adventureDungeonRouter.use(verifyToken);
@@ -143,9 +145,15 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
     });
 
     // ! get rewards
-    // todo add xp / levels to hunter
+    // * add xp / levels to user
+    // todo calculate the amount of xp for the user
+    await userUtils.addExperience(apiToken as string, 100);
 
-    // todo add xp / levels to user
+    // add xp / levels to hunter
+    // todo calculate the amount of xp for the user hunter
+    // need to get the userhunterid from somewhere
+    // ! await hunterUtils.addExperience(userHunterID as string, 100)
+    
 
     // * get random loot from loot pool
     const lootPool = dungeonDetails?.lootPool;
@@ -191,12 +199,6 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
         }, 
         data: {
             onMission: false,
-            experience: {
-                increment: 100
-            },
-            level: { 
-                increment: 1
-            }
         }
     })
     

@@ -2,7 +2,7 @@ import express, {Request, Response} from 'express';
 const userAccountRouter = express.Router();
 
 import prisma from '../../prisma/prisma';
-import userModels from '../../models/user';
+import accountModel from '../../models/account';
 
 // * user signs up with username and name
 // * they are added to the db and given an api token
@@ -19,7 +19,7 @@ userAccountRouter.post('/signup', async (req: Request, res: Response) => {
         },
         select: {
             id: true,
-            username: true
+            username: true,
         }
     })
 
@@ -32,7 +32,7 @@ userAccountRouter.post('/signup', async (req: Request, res: Response) => {
     }
 
     // * generate API token
-    const api_token = await userModels.genAPIKey();
+    const api_token = await accountModel.genAPIKey();
 
     // * create user
     await prisma.user.create({
