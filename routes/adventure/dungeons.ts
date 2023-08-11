@@ -3,8 +3,7 @@ const adventureDungeonRouter = express.Router();
 
 import prisma from '../../prisma/prisma';
 import adventureModel from '../../models/adventure';
-import hunterUtils from '../../models/hunter';
-import userUtils from '../../models/user';
+import userModel from '../../models/user';
 import verifyToken from '../../middleware/verifyToken';
 
 adventureDungeonRouter.use(verifyToken);
@@ -147,7 +146,7 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
     // ! get rewards
     // * add xp / levels to user
     // todo calculate the amount of xp for the user
-    await userUtils.addExperience(apiToken as string, 100);
+    await userModel.addExperience(apiToken as string, 100);
 
     // add xp / levels to hunter
     // todo calculate the amount of xp for the user hunter
@@ -178,7 +177,7 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
     let randomGold = Math.floor(Math.random() * (dungeonDetails?.level || 1)) * 100;
 
     // * change details to say debriefed
-    const updateAdventure = await prisma.adventure.update({
+    await prisma.adventure.update({
         where: {
             id: adventureID as string,
         },
@@ -188,7 +187,7 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
     })
 
     // * update hunter stats and level
-    const updatedHunter = await prisma.userHunters.updateMany({
+    await prisma.userHunters.updateMany({
         where: {
             hunter: {
                 id: adventureExists.hunter.hunterId as string,
@@ -203,7 +202,7 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
     })
     
     // * update user gold
-    const updatedUser = await prisma.user.update({
+    await prisma.user.update({
         where: {
             api_token: apiToken as string
         },
