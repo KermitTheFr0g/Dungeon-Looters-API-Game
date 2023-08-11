@@ -51,7 +51,7 @@ starterHunterRouter.get('/hunters', async (req: Request, res: Response) => {
 
 //! read through this function again
 // * user selects the starter hunter
-starterHunterRouter.post('/select-hunter', async (req: Request, res: Response) => {
+starterHunterRouter.post('/select', async (req: Request, res: Response) => {
     const hunterName = req.body.hunterName;
 
     // * check if user is applicable for starter hunter

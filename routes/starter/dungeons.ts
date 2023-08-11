@@ -7,7 +7,7 @@ import verifyToken from '../../middleware/verifyToken';
 starterDungeonRouter.use(verifyToken);
 
 // * returns back to the user the dungeons which can be selected
-starterDungeonRouter.get('/get-dungeons', async (req: Request, res: Response) => {
+starterDungeonRouter.get('/dungeons', async (req: Request, res: Response) => {
     // * get starter dungeons
     const getDungeons = await prisma.dungeon.findMany({
         where: {
@@ -27,7 +27,7 @@ starterDungeonRouter.get('/get-dungeons', async (req: Request, res: Response) =>
 });
 
 // * returns back details about a specific dungeon
-starterDungeonRouter.get('/dungeon-details', async (req: Request, res: Response) => {
+starterDungeonRouter.get('/details', async (req: Request, res: Response) => {
     const dungeonName = req.query.dungeonName;
 
     // * get dungeon details
@@ -59,7 +59,7 @@ starterDungeonRouter.get('/dungeon-details', async (req: Request, res: Response)
 // todo gives info about loot pool, level, etc
 
 // * user selects the starter dungeon
-starterDungeonRouter.post('/select-dungeon', async (req: Request, res: Response) => {
+starterDungeonRouter.post('/select', async (req: Request, res: Response) => {
     const dungeonName = req.body.dungeonName;
     const hunterName = req.body.hunterName;
     
