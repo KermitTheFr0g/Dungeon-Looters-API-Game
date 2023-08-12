@@ -1,8 +1,10 @@
 import prisma from '../prisma/prisma';
 
 class AdventureModel {
+    // * taking an input from the user
+    // * returning the dungeon list back from function
     // * update adventures to complete
-    async updateAdventures(dungeonsList: Array<{completingAt: Date, complete: boolean, id: string}>){
+    async completeAdventures(dungeonsList: Array<{completingAt: Date, complete: boolean, id: string}>){
         let completeDungeonAdventures: Array<string> = [];
         dungeonsList.map((adventure) => {
             if(new Date(adventure.completingAt) < new Date()){
@@ -22,8 +24,31 @@ class AdventureModel {
                 complete: true
             }
         })
+    }
 
-        return dungeonsList;
+    // * doesn't return anything
+    // * doesn't take any input of dungeons
+    async updateAdventures(apiToken: string){
+        // * takes users api token to get their active dungeon adventures
+        const activeDungeonAdventures = await prisma.adventure.findMany({
+            where: {
+                user: {
+                    api_token: apiToken as string,
+                },
+                debriefed: false,
+            },
+            select: {
+                id: true,
+                completingAt: true,
+                complete: true,
+            },
+        })
+
+        if(activeDungeonAdventures.length === 0){
+            return
+        }
+
+        await this.completeAdventures(activeDungeonAdventures);
     }
 
     // * collect items from item pool

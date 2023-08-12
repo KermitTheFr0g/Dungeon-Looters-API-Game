@@ -12,6 +12,9 @@ adventureDungeonRouter.use(verifyToken);
 adventureDungeonRouter.get('/active', async (req: Request, res: Response) => {
     const apiToken = req.query.token;
 
+    // * calls the update adventures function to update all of the user's active dungeon adventures
+    await adventureModel.updateAdventures(apiToken as string);
+
     // * get all of the user's active dungeon adventures
     let activeDungeonAdventures = await prisma.adventure.findMany({
         where: {
@@ -64,14 +67,9 @@ adventureDungeonRouter.get('/active', async (req: Request, res: Response) => {
         })
     }
 
-    // * check the active dungeon adventures to see if any are complete
-    const checkedAdventures = await adventureModel.updateAdventures(activeDungeonAdventures);
-
-    // * this returns back to the user the updates dungeons
-
     // * returns back to user active dungeons
     return res.json({
-        activeDungeonAdventures: checkedAdventures,
+        activeDungeonAdventures: activeDungeonAdventures,
     });
 });
 
@@ -87,6 +85,9 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
             message: 'No dungeon ID provided!'
         })
     }
+
+    // * calls the update adventures function to update all of the user's active dungeon adventures
+    await adventureModel.updateAdventures(apiToken as string);
 
     // * check dungeon id is valid and dungeon exists
     const adventureExists = await prisma.adventure.findFirst({
@@ -111,6 +112,8 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
             message: 'Dungeon Adventure does not exist!'
         })
     }
+
+
 
     // * check if dungeon adventure is complete and ready for debrief
     if(!adventureExists.complete || adventureExists.debriefed){
@@ -146,11 +149,11 @@ adventureDungeonRouter.post('/debrief', async (req: Request, res: Response) => {
     // ! get rewards
     // * add xp / levels to user
     // todo calculate the amount of xp for the user
-    await userModel.addExperience(apiToken as string, 100);
+    await userModel.addExperience(apiToken as string, 20);
 
     // add xp / levels to hunter
     // todo calculate the amount of xp for the user hunter
-    // need to get the userhunterid from somewhere
+    // todo need to get the userhunterid from somewhere
     // ! await hunterUtils.addExperience(userHunterID as string, 100)
     
 
@@ -258,7 +261,8 @@ adventureDungeonRouter.get('/historic', async (req: Request, res: Response) => {
                     }
                 }
             },
-        }
+        },
+        take: 10,
     })
 
     // * check if there are any historic dungeons
